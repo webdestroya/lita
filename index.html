@@ -33,6 +33,10 @@
         <h1>
 <a name="lita" class="anchor" href="#lita"><span class="octicon octicon-link"></span></a>Lita</h1>
 
+<p><a href="https://travis-ci.org/jimmycuadra/lita"><img src="https://travis-ci.org/jimmycuadra/lita.png" alt="Build Status"></a>
+<a href="https://codeclimate.com/github/jimmycuadra/lita"><img src="https://codeclimate.com/github/jimmycuadra/lita.png" alt="Code Climate"></a>
+<a href="https://coveralls.io/r/jimmycuadra/lita"><img src="https://coveralls.io/repos/jimmycuadra/lita/badge.png" alt="Coverage Status"></a></p>
+
 <p><img src="http://f.cl.ly/items/0c271a2P3k2V180B1R0X/lita.jpg" alt="Lita"></p>
 
 <p><strong>Lita</strong> is a chat bot written in Ruby with persistent storage provided by <a href="http://redis.io/">Redis</a>. It can connect to any chat service (given that there is an <a href="#adapters">adapter</a> available for it) and can have new behavior added via <a href="#handlers">handlers</a>. The plugin system is managed with regular RubyGems and <a href="http://gembundler.com/">Bundler</a>.</p>
@@ -76,7 +80,7 @@
 </ul><h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>First, install the gem with <code>gem install lita</code>. This gives you access to the <code>lita</code> commmand. Run <code>lita help</code> to list available tasks.</p>
+<p>First, install the gem with <code>gem install lita</code>. This gives you access to the <code>lita</code> command. Run <code>lita help</code> to list available tasks.</p>
 
 <p>Generate a new Lita instance by running <code>lita new NAME</code>. This will create a new directory called NAME (defaults to "lita") with a Gemfile and Lita configuration file.</p>
 
@@ -327,7 +331,7 @@ Lita: auth remove joe committers
     <span class="k">class</span> <span class="nc">Echo</span> <span class="o">&lt;</span> <span class="no">Handler</span>
       <span class="n">route</span> <span class="sr">/^echo\s+(.+)/</span><span class="p">,</span> <span class="ss">:echo</span><span class="p">,</span> <span class="ss">help</span><span class="p">:</span> <span class="p">{</span> <span class="s2">"echo FOO"</span> <span class="o">=&gt;</span> <span class="s2">"Echoes back FOO."</span> <span class="p">}</span>
 
-      <span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+      <span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="n">response</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">matches</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="k">end</span>
@@ -363,7 +367,7 @@ Lita: auth remove joe committers
 
         <span class="n">data</span> <span class="o">=</span> <span class="no">MultiJson</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">http_response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
         <span class="n">rep</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="s2">"representative"</span><span class="o">][</span><span class="s2">"name"</span><span class="o">]</span>
-        <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">zip</span><span class="p">,</span> <span class="n">data</span><span class="o">[</span><span class="s2">"representative"</span><span class="o">][</span><span class="s2">"name"</span><span class="o">]</span><span class="p">)</span>
+        <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">zip</span><span class="p">,</span> <span class="n">rep</span><span class="p">)</span>
         <span class="n">rep</span>
       <span class="k">end</span>
     <span class="k">end</span>
@@ -463,6 +467,11 @@ Lita: auth remove joe committers
 <li>Lita's logger is stubbed to prevent log messages from cluttering up your test output.</li>
 <li>Lita's configuration is cleared out before each example, so that the first call to <code>Lita.config</code> will start from the default configuration.</li>
 </ul><h2>
+<a name="running-as-a-daemon" class="anchor" href="#running-as-a-daemon"><span class="octicon octicon-link"></span></a>Running as a daemon</h2>
+
+<p>Lita has built-in support for daemonization on Unix systems. When run as a daemon, Lita will redirect standard output and standard error to a log file, and write the process ID to a PID file. To start Lita as a daemon, run <code>lita -d</code>. There are additional command line flags for specifying the path of the log and PID files, which override the defaults. If an existing Lita process is running when <code>lita -d</code> is invoked, Lita will abort and leave the original process running, unless the <code>-k</code> flag is specified, in which case it will kill the existing process. Run <code>lita help</code> for information about all the possible command line flags.</p>
+
+<h2>
 <a name="deploying-to-heroku" class="anchor" href="#deploying-to-heroku"><span class="octicon octicon-link"></span></a>Deploying to Heroku</h2>
 
 <p>There are a few things worth mentioning when deploying an instance of Lita to Heroku:</p>
