@@ -33,10 +33,6 @@
         <h1>
 <a name="lita" class="anchor" href="#lita"><span class="octicon octicon-link"></span></a>Lita</h1>
 
-<p><a href="https://travis-ci.org/jimmycuadra/lita"><img src="https://travis-ci.org/jimmycuadra/lita.png" alt="Build Status"></a>
-<a href="https://codeclimate.com/github/jimmycuadra/lita"><img src="https://codeclimate.com/github/jimmycuadra/lita.png" alt="Code Climate"></a>
-<a href="https://coveralls.io/r/jimmycuadra/lita"><img src="https://coveralls.io/repos/jimmycuadra/lita/badge.png" alt="Coverage Status"></a></p>
-
 <p><img src="http://f.cl.ly/items/0c271a2P3k2V180B1R0X/lita.jpg" alt="Lita"></p>
 
 <p><strong>Lita</strong> is a chat bot written in Ruby with persistent storage provided by <a href="http://redis.io/">Redis</a>. It can connect to any chat service (given that there is an <a href="#adapters">adapter</a> available for it) and can have new behavior added via <a href="#handlers">handlers</a>. The plugin system is managed with regular RubyGems and <a href="http://gembundler.com/">Bundler</a>.</p>
@@ -55,6 +51,7 @@
 <li>Support for outgoing HTTP requests</li>
 <li>Group-based authorization</li>
 <li>Configurable logging</li>
+<li>Generators for creating new plugins</li>
 </ul><h2>
 <a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why?</h2>
 
@@ -199,6 +196,8 @@ Lita: auth remove joe committers
 
 <p>An adapter is a packaged as a RubyGem. The adapter is a class that inherits from <code>Lita::Adapter</code>, implements a few required methods, and is registered by calling <code>Lita.register_adapter(:symbol_that_identifies_the_adapter, TheAdapterClass)</code>.</p>
 
+<p>To generate a starting template for a new adapter gem, run <code>lita adapter NAME</code>, where NAME is the name of the new gem.</p>
+
 <h3>
 <a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h3>
 
@@ -242,6 +241,8 @@ Lita: auth remove joe committers
 <a name="writing-a-handler" class="anchor" href="#writing-a-handler"><span class="octicon octicon-link"></span></a>Writing a handler</h2>
 
 <p>A handler is packaged as a RubyGem. A handler is a class that inherits from <code>Lita::Handler</code> and is registered by calling <code>Lita.register_handler(TheHandlerClass)</code>. There are two components to a handler: route definitions, and the methods that implement those routes. There are both chat routes and HTTP routes available to handlers.</p>
+
+<p>To generate a starting template for a new handler gem, run <code>lita handler NAME</code>, where NAME is the name of the new gem.</p>
 
 <h3>
 <a name="chat-routes" class="anchor" href="#chat-routes"><span class="octicon octicon-link"></span></a>Chat routes</h3>
