@@ -51,19 +51,7 @@ module Lita
       # @param message [Lita::Message] The incoming message.
       # @return [void]
       def dispatch(robot, message)
-        routes.select { |r| route_applies?(r, message, robot) }.each do |route|
-          log_dispatch(route)
-
-          begin
-            new(robot).public_send(
-              route.method_name,
-              build_response(message, route)
-            )
-          rescue Exception => e
-            log_dispatch_error(e)
-            raise e if rspec_loaded?
-          end
-        end
+        routes.select { |r| route_applies?(r, message, robot) }.each { |route| dispatch_to(route, robot, message) }
       end
 
       # Creates a new {Lita::HTTPRoute} which is used to define an HTTP route
@@ -94,6 +82,20 @@ module Lita
       end
 
       private
+
+      def dispatch_to(route, robot, message)
+        log_dispatch(route)
+
+        begin
+          new(robot).public_send(
+            route.method_name,
+            build_response(message, route)
+          )
+        rescue Exception => e
+          log_dispatch_error(e)
+          raise e if rspec_loaded?
+        end
+      end
 
       # Builds a response object for an incoming message.
       def build_response(message, route)
